@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "com.psxtracker.widget.app-mergeDebugResources-41:/layout/widget_kmi.xml",
+        "source": "com.psxtracker.widget.app-main-44:/layout/widget_kmi.xml"
+    },
+    {
+        "merged": "com.psxtracker.widget.app-mergeDebugResources-41:/layout/item_stock.xml",
+        "source": "com.psxtracker.widget.app-main-44:/layout/item_stock.xml"
+    },
+    {
+        "merged": "com.psxtracker.widget.app-mergeDebugResources-41:/layout/activity_main.xml",
+        "source": "com.psxtracker.widget.app-main-44:/layout/activity_main.xml"
+    }
+]

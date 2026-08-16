@@ -1,0 +1,74 @@
+[
+    {
+        "merged": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-merged_res-42:\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-main-44:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-merged_res-42:\\mipmap-xxhdpi_ic_launcher.xml.flat",
+        "source": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-main-44:\\mipmap-xxhdpi\\ic_launcher.xml"
+    },
+    {
+        "merged": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-merged_res-42:\\mipmap-xxxhdpi_ic_launcher.xml.flat",
+        "source": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-main-44:\\mipmap-xxxhdpi\\ic_launcher.xml"
+    },
+    {
+        "merged": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-merged_res-42:\\mipmap-mdpi_ic_launcher.xml.flat",
+        "source": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-main-44:\\mipmap-mdpi\\ic_launcher.xml"
+    },
+    {
+        "merged": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-merged_res-42:\\xml_kmi_widget_info.xml.flat",
+        "source": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-main-44:\\xml\\kmi_widget_info.xml"
+    },
+    {
+        "merged": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-merged_res-42:\\drawable_widget_background.xml.flat",
+        "source": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-main-44:\\drawable\\widget_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-merged_res-42:\\mipmap-xxxhdpi_ic_launcher_round.xml.flat",
+        "source": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-main-44:\\mipmap-xxxhdpi\\ic_launcher_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-merged_res-42:\\mipmap-hdpi_ic_launcher_round.xml.flat",
+        "source": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-main-44:\\mipmap-hdpi\\ic_launcher_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-merged_res-42:\\layout_item_stock.xml.flat",
+        "source": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-main-44:\\layout\\item_stock.xml"
+    },
+    {
+        "merged": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-merged_res-42:\\mipmap-xhdpi_ic_launcher_round.xml.flat",
+        "source": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-main-44:\\mipmap-xhdpi\\ic_launcher_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-merged_res-42:\\drawable_pill_background.xml.flat",
+        "source": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-main-44:\\drawable\\pill_background.xml"
+    },
+    {
+        "merged": "com.psxtracker.widget.app-merged_res-42:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.psxtracker.widget.app-main-44:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-merged_res-42:\\drawable_ic_launcher_foreground.xml.flat",
+        "source": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-main-44:\\drawable\\ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-merged_res-42:\\mipmap-xxhdpi_ic_launcher_round.xml.flat",
+        "source": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-main-44:\\mipmap-xxhdpi\\ic_launcher_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-merged_res-42:\\layout_widget_kmi.xml.flat",
+        "source": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-main-44:\\layout\\widget_kmi.xml"
+    },
+    {
+        "merged": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-merged_res-42:\\mipmap-hdpi_ic_launcher.xml.flat",
+        "source": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-main-44:\\mipmap-hdpi\\ic_launcher.xml"
+    },
+    {
+        "merged": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-merged_res-42:\\mipmap-xhdpi_ic_launcher.xml.flat",
+        "source": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-main-44:\\mipmap-xhdpi\\ic_launcher.xml"
+    },
+    {
+        "merged": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-merged_res-42:\\mipmap-mdpi_ic_launcher_round.xml.flat",
+        "source": "C:\\Users\\faizi\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-main-44:\\mipmap-mdpi\\ic_launcher_round.xml"
+    }
+]

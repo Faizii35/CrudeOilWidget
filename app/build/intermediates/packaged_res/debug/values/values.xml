@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorAccent">#0FA968</color>
+    <color name="colorBackground">#0D1117</color>
+    <color name="colorMuted">#8B949E</color>
+    <color name="colorNeutral">#BDBDBD</color>
+    <color name="colorOnSurface">#FFFFFF</color>
+    <color name="colorPriceDown">#F44336</color>
+    <color name="colorPriceUp">#4CAF50</color>
+    <color name="colorPrimary">#0FA968</color>
+    <color name="colorPrimaryDark">#0B7A4B</color>
+    <color name="colorSurface">#161B22</color>
+    <string name="app_name">PSX KMI Tracker</string>
+    <string name="widget_description">Live KMI30 / KMI All Share index values with per-stock move alerts</string>
+    <string name="widget_name">PSX KMI Indices</string>
+    <style name="AppActionBar" parent="Widget.MaterialComponents.ActionBar.Solid">
+        <item name="background">@color/colorBackground</item>
+        <item name="titleTextStyle">@style/AppActionBarTitle</item>
+    </style>
+    <style name="AppActionBarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+    <style name="Theme.PSXMarketWidget" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/colorBackground</item>
+        <item name="android:statusBarColor">@color/colorBackground</item>
+        <item name="android:navigationBarColor">@color/colorBackground</item>
+        <item name="actionBarStyle">@style/AppActionBar</item>
+    </style>
+    <style name="ThresholdChip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+</resources>
