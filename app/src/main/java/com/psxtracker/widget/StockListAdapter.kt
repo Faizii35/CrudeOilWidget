@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class StockListAdapter(
     private val onBellClicked: (StockQuote) -> Unit,
-    private val getSpecificThreshold: (String) -> Int?
+    private val getSpecificThresholds: (String) -> StockAlertPreferences.Thresholds?
 ) : RecyclerView.Adapter<StockListAdapter.ViewHolder>() {
 
     private var items: List<StockQuote> = emptyList()
@@ -45,8 +45,8 @@ class StockListAdapter(
         holder.price.text = item.priceFormatted
         holder.change.text = item.changeFormatted
         
-        val specificThreshold = getSpecificThreshold(item.symbol)
-        if (specificThreshold != null) {
+        val specific = getSpecificThresholds(item.symbol)
+        if (specific != null && (specific.up != null || specific.down != null)) {
             holder.bell.setColorFilter(Color.parseColor("#0FA968"))
             holder.bell.alpha = 1.0f
         } else {

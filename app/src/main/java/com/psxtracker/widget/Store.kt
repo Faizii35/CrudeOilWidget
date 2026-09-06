@@ -48,43 +48,52 @@ object AlertPreferences {
 
 /** Specific alerts per stock symbol. */
 object StockAlertPreferences {
-    private val SPECIFIC_ALERTS_KEY = stringPreferencesKey("specific_stock_alerts")
+    private val SPECIFIC_ALERTS_KEY = stringPreferencesKey("specific_stock_alerts_v2")
 
-    private suspend fun readMap(context: Context): MutableMap<String, Int> {
+    data class Thresholds(val up: Int?, val down: Int?)
+
+    private suspend fun readMap(context: Context): MutableMap<String, Thresholds> {
         val json = context.dataStore.data.first()[SPECIFIC_ALERTS_KEY] ?: return mutableMapOf()
-        val out = mutableMapOf<String, Int>()
+        val out = mutableMapOf<String, Thresholds>()
         try {
             val obj = JSONObject(json)
             obj.keys().forEach { symbol ->
-                out[symbol] = obj.getInt(symbol)
+                val entry = obj.getJSONObject(symbol)
+                out[symbol] = Thresholds(
+                    up = if (entry.has("up")) entry.getInt("up") else null,
+                    down = if (entry.has("down")) entry.getInt("down") else null
+                )
             }
         } catch (_: Exception) { }
         return out
     }
 
-    private suspend fun writeMap(context: Context, map: Map<String, Int>) {
+    private suspend fun writeMap(context: Context, map: Map<String, Thresholds>) {
         val obj = JSONObject()
-        map.forEach { (symbol, threshold) ->
-            obj.put(symbol, threshold)
+        map.forEach { (symbol, thresholds) ->
+            val entry = JSONObject()
+            thresholds.up?.let { entry.put("up", it) }
+            thresholds.down?.let { entry.put("down", it) }
+            obj.put(symbol, entry)
         }
         context.dataStore.edit { prefs -> prefs[SPECIFIC_ALERTS_KEY] = obj.toString() }
     }
 
-    suspend fun getThreshold(context: Context, symbol: String): Int? {
-        return readMap(context)[symbol]
+    suspend fun getThresholds(context: Context, symbol: String): Thresholds {
+        return readMap(context)[symbol] ?: Thresholds(null, null)
     }
 
-    suspend fun setThreshold(context: Context, symbol: String, threshold: Int?) {
+    suspend fun setThresholds(context: Context, symbol: String, thresholds: Thresholds) {
         val map = readMap(context)
-        if (threshold == null) {
+        if (thresholds.up == null && thresholds.down == null) {
             map.remove(symbol)
         } else {
-            map[symbol] = threshold
+            map[symbol] = thresholds
         }
         writeMap(context, map)
     }
 
-    suspend fun getAllSpecificAlerts(context: Context): Map<String, Int> = readMap(context)
+    suspend fun getAllSpecificAlerts(context: Context): Map<String, Thresholds> = readMap(context)
 }
 
 /**

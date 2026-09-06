@@ -23,7 +23,13 @@ public final class ActivityMainBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
-  public final ChipGroup chipGroupThresholds;
+  public final ChipGroup chipGroupSectors;
+
+  @NonNull
+  public final ChipGroup chipGroupThresholdsDown;
+
+  @NonNull
+  public final ChipGroup chipGroupThresholdsUp;
 
   @NonNull
   public final RecyclerView recyclerStocks;
@@ -43,13 +49,15 @@ public final class ActivityMainBinding implements ViewBinding {
   @NonNull
   public final TextView tvMarketStatus;
 
-  private ActivityMainBinding(@NonNull LinearLayout rootView,
-      @NonNull ChipGroup chipGroupThresholds, @NonNull RecyclerView recyclerStocks,
-      @NonNull SwipeRefreshLayout swipeRefresh, @NonNull TextView tvBatteryHint,
-      @NonNull TextView tvKmi30Summary, @NonNull TextView tvKmiallSummary,
-      @NonNull TextView tvMarketStatus) {
+  private ActivityMainBinding(@NonNull LinearLayout rootView, @NonNull ChipGroup chipGroupSectors,
+      @NonNull ChipGroup chipGroupThresholdsDown, @NonNull ChipGroup chipGroupThresholdsUp,
+      @NonNull RecyclerView recyclerStocks, @NonNull SwipeRefreshLayout swipeRefresh,
+      @NonNull TextView tvBatteryHint, @NonNull TextView tvKmi30Summary,
+      @NonNull TextView tvKmiallSummary, @NonNull TextView tvMarketStatus) {
     this.rootView = rootView;
-    this.chipGroupThresholds = chipGroupThresholds;
+    this.chipGroupSectors = chipGroupSectors;
+    this.chipGroupThresholdsDown = chipGroupThresholdsDown;
+    this.chipGroupThresholdsUp = chipGroupThresholdsUp;
     this.recyclerStocks = recyclerStocks;
     this.swipeRefresh = swipeRefresh;
     this.tvBatteryHint = tvBatteryHint;
@@ -85,9 +93,21 @@ public final class ActivityMainBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.chip_group_thresholds;
-      ChipGroup chipGroupThresholds = ViewBindings.findChildViewById(rootView, id);
-      if (chipGroupThresholds == null) {
+      id = R.id.chip_group_sectors;
+      ChipGroup chipGroupSectors = ViewBindings.findChildViewById(rootView, id);
+      if (chipGroupSectors == null) {
+        break missingId;
+      }
+
+      id = R.id.chip_group_thresholds_down;
+      ChipGroup chipGroupThresholdsDown = ViewBindings.findChildViewById(rootView, id);
+      if (chipGroupThresholdsDown == null) {
+        break missingId;
+      }
+
+      id = R.id.chip_group_thresholds_up;
+      ChipGroup chipGroupThresholdsUp = ViewBindings.findChildViewById(rootView, id);
+      if (chipGroupThresholdsUp == null) {
         break missingId;
       }
 
@@ -127,8 +147,9 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityMainBinding((LinearLayout) rootView, chipGroupThresholds, recyclerStocks,
-          swipeRefresh, tvBatteryHint, tvKmi30Summary, tvKmiallSummary, tvMarketStatus);
+      return new ActivityMainBinding((LinearLayout) rootView, chipGroupSectors,
+          chipGroupThresholdsDown, chipGroupThresholdsUp, recyclerStocks, swipeRefresh,
+          tvBatteryHint, tvKmi30Summary, tvKmiallSummary, tvMarketStatus);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -3197,6 +3197,8 @@ id cache_measures
 id callMeasure
 id cancel_button
 id carryVelocity
+id cb_down
+id cb_up
 id center
 id centerCrop
 id centerInside
@@ -3507,6 +3509,8 @@ id snapMargins
 id south
 id spacer
 id special_effects_controller_view_tag
+id spinner_down
+id spinner_up
 id spline
 id split_action_bar
 id spread
@@ -3590,6 +3594,7 @@ id tv_price
 id tv_sector
 id tv_status
 id tv_symbol
+id tv_title
 id unchecked
 id uniform
 id unlabeled
@@ -3745,6 +3750,7 @@ layout design_navigation_menu
 layout design_navigation_menu_item
 layout design_text_input_end_icon
 layout design_text_input_start_icon
+layout dialog_specific_alert
 layout ime_base_split_test_activity
 layout ime_secondary_split_test_activity
 layout item_stock
@@ -3869,9 +3875,11 @@ string fab_transformation_sheet_behavior
 string hide_bottom_view_on_scroll_behavior
 string icon_content_description
 string item_view_role_description
+string label_down_move
 string label_filter_sector
 string label_notify_down
 string label_notify_up
+string label_up_move
 string m3_exceed_max_badge_text_suffix
 string m3_ref_typeface_brand_medium
 string m3_ref_typeface_brand_regular
@@ -3984,6 +3992,7 @@ string searchview_navigation_content_description
 string side_sheet_accessibility_pane_title
 string side_sheet_behavior
 string status_bar_notification_info_overflow
+string title_specific_alert
 string widget_description
 string widget_name
 style AlertDialog_AppCompat

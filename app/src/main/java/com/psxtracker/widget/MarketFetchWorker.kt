@@ -84,9 +84,13 @@ class MarketFetchWorker(
         var moversAboveAnyThreshold = 0
 
         for (stock in stocks) {
-            val specificThreshold = specificAlerts[stock.symbol]
-            val tier = if (specificThreshold != null) {
-                if (kotlin.math.abs(stock.changePercent) >= specificThreshold) specificThreshold else null
+            val specific = specificAlerts[stock.symbol]
+            val tier = if (specific != null) {
+                if (stock.changePercent >= 0) {
+                    if (specific.up != null && stock.changePercent >= specific.up) specific.up else null
+                } else {
+                    if (specific.down != null && kotlin.math.abs(stock.changePercent) >= specific.down) specific.down else null
+                }
             } else {
                 AlertPreferences.matchedTier(stock.changePercent, enabledUp, enabledDown)
             }

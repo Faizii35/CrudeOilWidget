@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: StockListAdapter
-    private var specificAlerts: Map<String, Int> = emptyMap()
+    private var specificAlerts: Map<String, StockAlertPreferences.Thresholds> = emptyMap()
     private var allStocks: List<StockQuote> = emptyList()
     private var selectedSector: String? = null
 
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
         adapter = StockListAdapter(
             onBellClicked = { quote -> showSpecificAlertPicker(quote) },
-            getSpecificThreshold = { symbol -> specificAlerts[symbol] }
+            getSpecificThresholds = { symbol -> specificAlerts[symbol] }
         )
         binding.recyclerStocks.layoutManager = LinearLayoutManager(this)
         binding.recyclerStocks.adapter = adapter
@@ -72,20 +72,45 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showSpecificAlertPicker(quote: StockQuote) {
-        val current = specificAlerts[quote.symbol]
-        val options = listOf("None") + ALL_THRESHOLDS.map { "$it%" }
-        val checkedItem = if (current == null) 0 else ALL_THRESHOLDS.indexOf(current) + 1
+        val current = specificAlerts[quote.symbol] ?: StockAlertPreferences.Thresholds(null, null)
+        
+        val dialogBinding = com.psxtracker.widget.databinding.DialogSpecificAlertBinding.inflate(layoutInflater)
+        dialogBinding.tvTitle.text = getString(R.string.title_specific_alert, quote.symbol)
+        
+        val options = ALL_THRESHOLDS.map { "$it%" }
+        val arrayAdapter = android.widget.ArrayAdapter(this, android.R.layout.simple_spinner_item, options).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        
+        dialogBinding.spinnerUp.adapter = arrayAdapter
+        dialogBinding.spinnerDown.adapter = arrayAdapter
+        
+        dialogBinding.cbUp.isChecked = current.up != null
+        dialogBinding.spinnerUp.isEnabled = dialogBinding.cbUp.isChecked
+        current.up?.let { dialogBinding.spinnerUp.setSelection(ALL_THRESHOLDS.indexOf(it)) }
+        dialogBinding.cbUp.setOnCheckedChangeListener { _, isChecked -> 
+            dialogBinding.spinnerUp.isEnabled = isChecked 
+        }
+        
+        dialogBinding.cbDown.isChecked = current.down != null
+        dialogBinding.spinnerDown.isEnabled = dialogBinding.cbDown.isChecked
+        current.down?.let { dialogBinding.spinnerDown.setSelection(ALL_THRESHOLDS.indexOf(it)) }
+        dialogBinding.cbDown.setOnCheckedChangeListener { _, isChecked -> 
+            dialogBinding.spinnerDown.isEnabled = isChecked 
+        }
 
         com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-            .setTitle("Alert threshold for ${quote.symbol}")
-            .setSingleChoiceItems(options.toTypedArray(), checkedItem) { dialog, which ->
-                val newThreshold = if (which == 0) null else ALL_THRESHOLDS[which - 1]
+            .setView(dialogBinding.root)
+            .setPositiveButton("Save") { _, _ ->
+                val newUp = if (dialogBinding.cbUp.isChecked) ALL_THRESHOLDS[dialogBinding.spinnerUp.selectedItemPosition] else null
+                val newDown = if (dialogBinding.cbDown.isChecked) ALL_THRESHOLDS[dialogBinding.spinnerDown.selectedItemPosition] else null
+                
                 lifecycleScope.launch {
-                    StockAlertPreferences.setThreshold(this@MainActivity, quote.symbol, newThreshold)
+                    StockAlertPreferences.setThresholds(this@MainActivity, quote.symbol, StockAlertPreferences.Thresholds(newUp, newDown))
                     loadSpecificAlerts()
                 }
-                dialog.dismiss()
             }
+            .setNegativeButton("Cancel", null)
             .show()
     }
 

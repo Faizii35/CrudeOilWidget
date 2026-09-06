@@ -1,5 +1,13 @@
 [
     {
+        "merged": "C:\\Users\\faizi\\Downloads\\CrudeOilWidget\\CrudeOilWidget\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-mergeDebugResources-41:\\layout\\dialog_specific_alert.xml",
+        "source": "C:\\Users\\faizi\\Downloads\\CrudeOilWidget\\CrudeOilWidget\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-main-44:\\layout\\dialog_specific_alert.xml"
+    },
+    {
+        "merged": "com.psxtracker.widget.app-mergeDebugResources-41:/layout/dialog_specific_alert.xml",
+        "source": "com.psxtracker.widget.app-main-44:/layout/dialog_specific_alert.xml"
+    },
+    {
         "merged": "C:\\Users\\faizi\\Downloads\\CrudeOilWidget\\CrudeOilWidget\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-mergeDebugResources-41:\\layout\\activity_main.xml",
         "source": "C:\\Users\\faizi\\Downloads\\CrudeOilWidget\\CrudeOilWidget\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-main-44:\\layout\\activity_main.xml"
     },
@@ -10,9 +18,5 @@
     {
         "merged": "C:\\Users\\faizi\\Downloads\\CrudeOilWidget\\CrudeOilWidget\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-mergeDebugResources-41:\\layout\\item_stock.xml",
         "source": "C:\\Users\\faizi\\Downloads\\CrudeOilWidget\\CrudeOilWidget\\.gradle\\daemon\\8.2\\com.psxtracker.widget.app-main-44:\\layout\\item_stock.xml"
-    },
-    {
-        "merged": "com.psxtracker.widget.app-mergeDebugResources-41:/layout/activity_main.xml",
-        "source": "com.psxtracker.widget.app-main-44:/layout/activity_main.xml"
     }
 ]

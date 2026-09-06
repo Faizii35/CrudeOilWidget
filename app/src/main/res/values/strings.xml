@@ -7,4 +7,7 @@
     <string name="label_filter_sector">Filter by sector:</string>
     <string name="label_notify_up">Notify me when a stock goes UP by:</string>
     <string name="label_notify_down">Notify me when a stock goes DOWN by:</string>
+    <string name="title_specific_alert">Alert threshold for %1$s</string>
+    <string name="label_up_move">Alert on UP move</string>
+    <string name="label_down_move">Alert on DOWN move</string>
 </resources>
