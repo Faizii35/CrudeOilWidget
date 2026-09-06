@@ -14,6 +14,6 @@
         android:x="54dp"
         android:y="66dp"
         android:textSize="34sp"
-        android:fillColor="#FFFFFF"
+        android:fillColor="#0D1117"
         android:textAlignment="center">PSX</text>
 </vector>

@@ -30,7 +30,7 @@ class MarketFetchWorker(
                 .addTag(TAG)
                 .build()
             WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-                WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, request
+                WORK_NAME, ExistingPeriodicWorkPolicy.UPDATE, request
             )
             Log.d(TAG, "Periodic fetch scheduled")
         }
@@ -42,9 +42,22 @@ class MarketFetchWorker(
                 .build()
             val data = Data.Builder().putBoolean(KEY_FORCE, force).build()
             val request = OneTimeWorkRequestBuilder<MarketFetchWorker>()
-                .setConstraints(constraints).setInputData(data).addTag(TAG).build()
+                .setConstraints(constraints)
+                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                .setInputData(data)
+                .addTag(TAG)
+                .build()
             WorkManager.getInstance(context).enqueue(request)
         }
+    }
+
+    override suspend fun getForegroundInfo(): ForegroundInfo {
+        return ForegroundInfo(
+            1001,
+            NotificationHelper.createSimpleNotification(
+                context, "Updating market data...", "Fetching latest stock quotes"
+            )
+        )
     }
 
     override suspend fun doWork(): Result {
@@ -64,13 +77,21 @@ class MarketFetchWorker(
             return Result.retry()
         }
 
-        val enabledThresholds = AlertPreferences.getThresholds(context)
+        val enabledUp = AlertPreferences.getThresholdsUp(context)
+        val enabledDown = AlertPreferences.getThresholdsDown(context)
+        val specificAlerts = StockAlertPreferences.getAllSpecificAlerts(context)
         val movers = mutableListOf<Pair<StockQuote, Int>>()
         var moversAboveAnyThreshold = 0
 
-        if (enabledThresholds.isNotEmpty()) {
-            for (stock in stocks) {
-                val tier = AlertPreferences.matchedTier(stock.changePercent, enabledThresholds) ?: continue
+        for (stock in stocks) {
+            val specificThreshold = specificAlerts[stock.symbol]
+            val tier = if (specificThreshold != null) {
+                if (kotlin.math.abs(stock.changePercent) >= specificThreshold) specificThreshold else null
+            } else {
+                AlertPreferences.matchedTier(stock.changePercent, enabledUp, enabledDown)
+            }
+
+            if (tier != null) {
                 moversAboveAnyThreshold++
                 if (NotifiedState.shouldNotifyAndRecord(context, stock.symbol, tier)) {
                     movers.add(stock to tier)

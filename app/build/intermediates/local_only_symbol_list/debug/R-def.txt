@@ -10,11 +10,15 @@ color colorPriceUp
 color colorPrimary
 color colorPrimaryDark
 color colorSurface
+drawable ic_bell
 drawable ic_launcher_foreground
 drawable pill_background
 drawable widget_background
 id btn_refresh
-id chip_group_thresholds
+id chip_group_sectors
+id chip_group_thresholds_down
+id chip_group_thresholds_up
+id iv_bell
 id recycler_stocks
 id swipe_refresh
 id tv_battery_hint
@@ -39,6 +43,10 @@ layout widget_kmi
 mipmap ic_launcher
 mipmap ic_launcher_round
 string app_name
+string desc_specific_alert
+string label_filter_sector
+string label_notify_down
+string label_notify_up
 string widget_description
 string widget_name
 style AppActionBar

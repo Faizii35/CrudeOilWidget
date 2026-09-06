@@ -36,7 +36,7 @@ object MarketRepository {
             val request = chain.request().newBuilder()
                 .header(
                     "User-Agent",
-                    "Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36"
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
                 )
                 .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
                 .header("Accept-Language", "en-US,en;q=0.5")
@@ -106,7 +106,7 @@ object MarketRepository {
         fun idxOf(vararg names: String): Int? = names.firstNotNullOfOrNull { colIndex[it] }
 
         val symbolCol = idxOf("SYMBOL") ?: 0
-        val sectorCol = idxOf("SECTOR")
+        val sectorCol = idxOf("SECTOR", "SECTOR NAME")
         val listedInCol = idxOf("LISTED IN")
         val ldcpCol = idxOf("LDCP")
         val currentCol = idxOf("CURRENT")
@@ -133,7 +133,13 @@ object MarketRepository {
             // Skip rows that aren't equities in either tracked index at all (cheap early exit for huge table).
             if (indices.none { it in TRACKED_INDICES }) continue
 
-            val sector = sectorCol?.let { cells.getOrNull(it)?.text()?.trim() } ?: ""
+            val sectorCell = sectorCol?.let { cells.getOrNull(it) }
+            val rawSector = sectorCell?.attr("title")?.takeIf { it.isNotBlank() }
+                ?: sectorCell?.attr("data-title")?.takeIf { it.isNotBlank() }
+                ?: sectorCell?.text()?.trim()
+                ?: ""
+            val sector = SectorNames.getName(rawSector)
+            
             val ldcp = ldcpCol?.let { cells.getOrNull(it)?.text()?.toCleanDouble() } ?: 0.0
             val current = currentCol?.let { cells.getOrNull(it)?.text()?.toCleanDouble() } ?: 0.0
             val change = changeCol?.let { cells.getOrNull(it)?.text()?.toCleanDouble() } ?: (current - ldcp)

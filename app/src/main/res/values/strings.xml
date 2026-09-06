@@ -3,4 +3,8 @@
     <string name="app_name">PSX KMI Tracker</string>
     <string name="widget_name">PSX KMI Indices</string>
     <string name="widget_description">Live KMI30 / KMI All Share index values with per-stock move alerts</string>
+    <string name="desc_specific_alert">Set specific alert</string>
+    <string name="label_filter_sector">Filter by sector:</string>
+    <string name="label_notify_up">Notify me when a stock goes UP by:</string>
+    <string name="label_notify_down">Notify me when a stock goes DOWN by:</string>
 </resources>

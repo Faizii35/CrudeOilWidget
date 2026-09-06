@@ -3,6 +3,7 @@ package com.psxtracker.widget
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -23,6 +24,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: StockListAdapter
+    private var specificAlerts: Map<String, Int> = emptyMap()
+    private var allStocks: List<StockQuote> = emptyList()
+    private var selectedSector: String? = null
 
     private val notifPermLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -41,12 +45,16 @@ class MainActivity : AppCompatActivity() {
         requestNotifPermission()
         MarketFetchWorker.schedule(this)
 
-        adapter = StockListAdapter()
+        adapter = StockListAdapter(
+            onBellClicked = { quote -> showSpecificAlertPicker(quote) },
+            getSpecificThreshold = { symbol -> specificAlerts[symbol] }
+        )
         binding.recyclerStocks.layoutManager = LinearLayoutManager(this)
         binding.recyclerStocks.adapter = adapter
 
         setupThresholdChips()
         setupBatteryHint()
+        loadSpecificAlerts()
 
         binding.swipeRefresh.setOnRefreshListener {
             MarketFetchWorker.runNow(this, force = true)
@@ -56,6 +64,31 @@ class MainActivity : AppCompatActivity() {
         refreshFromNetwork()
     }
 
+    private fun loadSpecificAlerts() {
+        lifecycleScope.launch {
+            specificAlerts = StockAlertPreferences.getAllSpecificAlerts(this@MainActivity)
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun showSpecificAlertPicker(quote: StockQuote) {
+        val current = specificAlerts[quote.symbol]
+        val options = listOf("None") + ALL_THRESHOLDS.map { "$it%" }
+        val checkedItem = if (current == null) 0 else ALL_THRESHOLDS.indexOf(current) + 1
+
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+            .setTitle("Alert threshold for ${quote.symbol}")
+            .setSingleChoiceItems(options.toTypedArray(), checkedItem) { dialog, which ->
+                val newThreshold = if (which == 0) null else ALL_THRESHOLDS[which - 1]
+                lifecycleScope.launch {
+                    StockAlertPreferences.setThreshold(this@MainActivity, quote.symbol, newThreshold)
+                    loadSpecificAlerts()
+                }
+                dialog.dismiss()
+            }
+            .show()
+    }
+
     override fun onResume() {
         super.onResume()
         updateMarketStatus()
@@ -63,32 +96,102 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupThresholdChips() {
-        binding.chipGroupThresholds.removeAllViews()
+        binding.chipGroupThresholdsUp.removeAllViews()
+        binding.chipGroupThresholdsDown.removeAllViews()
         lifecycleScope.launch {
-            val enabled = AlertPreferences.getThresholds(this@MainActivity)
+            val enabledUp = AlertPreferences.getThresholdsUp(this@MainActivity)
+            val enabledDown = AlertPreferences.getThresholdsDown(this@MainActivity)
+
+            val colorUp = ContextCompat.getColor(this@MainActivity, R.color.colorPriceUp)
+            val colorDown = ContextCompat.getColor(this@MainActivity, R.color.colorPriceDown)
+            val colorWhite = android.graphics.Color.WHITE
+            val colorTransparent = android.graphics.Color.TRANSPARENT
+
             ALL_THRESHOLDS.forEach { pct ->
-                val chip = Chip(this@MainActivity).apply {
-                    text = "${pct}%"
+                // Up chips
+                val chipUp = Chip(this@MainActivity).apply {
+                    text = "+${pct}%"
                     isCheckable = true
-                    isChecked = enabled.contains(pct)
-                    setChipBackgroundColorResource(android.R.color.transparent)
+                    isChecked = enabledUp.contains(pct)
+                    isCheckedIconVisible = false
                     chipStrokeWidth = 2f
-                    setTextColor(android.graphics.Color.WHITE)
+                    
+                    val states = arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf())
+                    chipBackgroundColor = ColorStateList(states, intArrayOf(colorUp, colorTransparent))
+                    chipStrokeColor = ColorStateList(states, intArrayOf(colorUp, colorUp))
+                    setTextColor(ColorStateList(states, intArrayOf(colorWhite, colorUp)))
                 }
-                chip.setOnCheckedChangeListener { _, _ -> persistThresholds() }
-                binding.chipGroupThresholds.addView(chip)
+                chipUp.setOnCheckedChangeListener { _, _ -> persistThresholds(true) }
+                binding.chipGroupThresholdsUp.addView(chipUp)
+
+                // Down chips
+                val chipDown = Chip(this@MainActivity).apply {
+                    text = "-${pct}%"
+                    isCheckable = true
+                    isChecked = enabledDown.contains(pct)
+                    isCheckedIconVisible = false
+                    chipStrokeWidth = 2f
+
+                    val states = arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf())
+                    chipBackgroundColor = ColorStateList(states, intArrayOf(colorDown, colorTransparent))
+                    chipStrokeColor = ColorStateList(states, intArrayOf(colorDown, colorDown))
+                    setTextColor(ColorStateList(states, intArrayOf(colorWhite, colorDown)))
+                }
+                chipDown.setOnCheckedChangeListener { _, _ -> persistThresholds(false) }
+                binding.chipGroupThresholdsDown.addView(chipDown)
             }
         }
     }
 
-    private fun persistThresholds() {
-        val selected = (0 until binding.chipGroupThresholds.childCount)
-            .map { binding.chipGroupThresholds.getChildAt(it) as Chip }
+    private fun setupSectorChips(stocks: List<StockQuote>) {
+        val sectors = stocks.map { it.sector }.distinct().sorted()
+        val currentSectorsInGroup = (0 until binding.chipGroupSectors.childCount)
+            .map { (binding.chipGroupSectors.getChildAt(it) as Chip).text.toString() }
+            .toSet()
+
+        if (sectors.toSet() == currentSectorsInGroup) return
+
+        binding.chipGroupSectors.removeAllViews()
+        sectors.forEach { sectorName ->
+            val chip = Chip(this).apply {
+                text = sectorName
+                isCheckable = true
+                isChecked = (sectorName == selectedSector)
+                setChipBackgroundColorResource(android.R.color.transparent)
+                setChipStrokeColorResource(R.color.colorPrimary)
+                chipStrokeWidth = 2f
+                setTextColor(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
+            }
+            chip.setOnCheckedChangeListener { _, isChecked ->
+                selectedSector = if (isChecked) sectorName else null
+                applyFilters()
+            }
+            binding.chipGroupSectors.addView(chip)
+        }
+    }
+
+    private fun applyFilters() {
+        val filtered = if (selectedSector == null) {
+            allStocks
+        } else {
+            allStocks.filter { it.sector == selectedSector }
+        }
+        adapter.submitList(filtered)
+    }
+
+    private fun persistThresholds(isUp: Boolean) {
+        val group = if (isUp) binding.chipGroupThresholdsUp else binding.chipGroupThresholdsDown
+        val selected = (0 until group.childCount)
+            .map { group.getChildAt(it) as Chip }
             .filter { it.isChecked }
-            .map { it.text.toString().removeSuffix("%").toInt() }
+            .map { it.text.toString().replace("+", "").replace("-", "").removeSuffix("%").toInt() }
             .toSet()
         lifecycleScope.launch {
-            AlertPreferences.setThresholds(this@MainActivity, selected)
+            if (isUp) {
+                AlertPreferences.setThresholdsUp(this@MainActivity, selected)
+            } else {
+                AlertPreferences.setThresholdsDown(this@MainActivity, selected)
+            }
         }
     }
 
@@ -129,7 +232,9 @@ class MainActivity : AppCompatActivity() {
 
             val stocksResult = MarketRepository.fetchTrackedStocks()
             stocksResult.onSuccess { stocks ->
-                adapter.submitList(stocks)
+                allStocks = stocks
+                setupSectorChips(stocks)
+                applyFilters()
             }.onFailure { err ->
                 Toast.makeText(this@MainActivity, "Couldn't load data: ${err.message}", Toast.LENGTH_LONG).show()
             }
@@ -147,3 +252,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+

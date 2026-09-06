@@ -41,3 +41,46 @@ fun Double.toTrend(): Trend = when {
     this < 0 -> Trend.DOWN
     else -> Trend.NEUTRAL
 }
+
+object SectorNames {
+    private val MAP = mapOf(
+        "0801" to "Automobile Assembler",
+        "0802" to "Automobile Parts",
+        "0803" to "Cable & Electrical Goods",
+        "0804" to "Canning",
+        "0805" to "Cement",
+        "0806" to "Chemical",
+        "0807" to "Commercial Banks",
+        "0808" to "Engineering",
+        "0809" to "Exchange Traded Funds",
+        "0810" to "Fertilizer",
+        "0811" to "Financial Services",
+        "0812" to "Food & Personal Care",
+        "0813" to "Glass & Ceramics",
+        "0814" to "Insurance",
+        "0815" to "Investment Banks",
+        "0816" to "Jute",
+        "0817" to "Leasing Companies",
+        "0818" to "Miscellaneous",
+        "0819" to "Modarabas",
+        "0820" to "Oil & Gas Exploration",
+        "0821" to "Oil & Gas Marketing",
+        "0822" to "Paper & Board",
+        "0823" to "Pharmaceuticals",
+        "0824" to "Power Generation",
+        "0825" to "Property",
+        "0826" to "REIT",
+        "0827" to "Refinery",
+        "0828" to "Sugar & Allied",
+        "0829" to "Technology & Communication",
+        "0830" to "Textile Braid",
+        "0831" to "Textile Composite",
+        "0832" to "Textile Spinning",
+        "0833" to "Textile Weaving",
+        "0834" to "Transport",
+        "0835" to "Vanaspati",
+        "0836" to "Woollen"
+    )
+
+    fun getName(code: String): String = MAP[code] ?: code
+}

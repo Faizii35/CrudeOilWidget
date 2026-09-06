@@ -7,7 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class StockListAdapter : RecyclerView.Adapter<StockListAdapter.ViewHolder>() {
+class StockListAdapter(
+    private val onBellClicked: (StockQuote) -> Unit,
+    private val getSpecificThreshold: (String) -> Int?
+) : RecyclerView.Adapter<StockListAdapter.ViewHolder>() {
 
     private var items: List<StockQuote> = emptyList()
 
@@ -22,6 +25,7 @@ class StockListAdapter : RecyclerView.Adapter<StockListAdapter.ViewHolder>() {
         val sector: TextView = view.findViewById(R.id.tv_sector)
         val price: TextView = view.findViewById(R.id.tv_price)
         val change: TextView = view.findViewById(R.id.tv_change)
+        val bell: android.widget.ImageView = view.findViewById(R.id.iv_bell)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -40,6 +44,18 @@ class StockListAdapter : RecyclerView.Adapter<StockListAdapter.ViewHolder>() {
         holder.sector.text = "${item.sector} \u00b7 $indexTag".trim()
         holder.price.text = item.priceFormatted
         holder.change.text = item.changeFormatted
+        
+        val specificThreshold = getSpecificThreshold(item.symbol)
+        if (specificThreshold != null) {
+            holder.bell.setColorFilter(Color.parseColor("#0FA968"))
+            holder.bell.alpha = 1.0f
+        } else {
+            holder.bell.setColorFilter(Color.parseColor("#8B949E"))
+            holder.bell.alpha = 0.5f
+        }
+        
+        holder.bell.setOnClickListener { onBellClicked(item) }
+
         val color = when {
             item.change > 0 -> Color.parseColor("#4CAF50")
             item.change < 0 -> Color.parseColor("#F44336")

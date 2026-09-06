@@ -50,18 +50,66 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Notify me when a stock moves by:"
+            android:text="@string/label_notify_up"
+            android:textColor="#4CAF50"
+            android:textSize="12sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="6dp" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_thresholds_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleLine="true"
+                app:chipSpacingHorizontal="6dp" />
+        </HorizontalScrollView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_notify_down"
+            android:textColor="#F44336"
+            android:textSize="12sp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="6dp" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_thresholds_down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleLine="true"
+                app:chipSpacingHorizontal="6dp" />
+        </HorizontalScrollView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_filter_sector"
             android:textColor="#8B949E"
             android:textSize="12sp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="6dp" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chip_group_thresholds"
+        <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:singleLine="false"
-            app:chipSpacingHorizontal="6dp" />
+            android:scrollbars="none">
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_sectors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="false"
+                app:chipSpacingHorizontal="6dp" />
+        </HorizontalScrollView>
 
         <TextView
             android:id="@+id/tv_battery_hint"

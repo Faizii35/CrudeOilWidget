@@ -15,9 +15,6 @@ import androidx.core.app.NotificationManagerCompat
 object NotificationHelper {
 
     const val CHANNEL_ID_ALERT = "psx_stock_alerts"
-    const val CHANNEL_ID_SUMMARY = "psx_stock_alerts" // same channel, summary just groups
-    private const val GROUP_KEY = "com.psxtracker.widget.MOVERS_GROUP"
-    private const val SUMMARY_NOTIF_ID = 9000
 
     fun createChannel(context: Context) {
         val manager = context.getSystemService(NotificationManager::class.java) ?: return
@@ -39,7 +36,16 @@ object NotificationHelper {
         manager.createNotificationChannel(channel)
     }
 
-    /** Post one notification per moving stock, plus a summary that bundles them in the shade. */
+    fun createSimpleNotification(context: Context, title: String, content: String): Notification {
+        return NotificationCompat.Builder(context, CHANNEL_ID_ALERT)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle(title)
+            .setContentText(content)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .build()
+    }
+
+    /** Post one notification per moving stock. */
     fun postMoverAlerts(context: Context, movers: List<Pair<StockQuote, Int>>) {
         if (movers.isEmpty()) return
         val manager = NotificationManagerCompat.from(context)
@@ -56,7 +62,7 @@ object NotificationHelper {
             val body = "Rs. ${quote.priceFormatted}   ${quote.changeFormatted}   \u00b7   ${quote.sector}"
 
             val notification = NotificationCompat.Builder(context, CHANNEL_ID_ALERT)
-                .setSmallIcon(android.R.drawable.stat_notify_sync)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle(title)
                 .setContentText(body)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -65,7 +71,6 @@ object NotificationHelper {
                 .setAutoCancel(true)
                 .setContentIntent(openAppPi)
                 .setColor(if (isUp) 0xFF4CAF50.toInt() else 0xFFF44336.toInt())
-                .setGroup(GROUP_KEY)
                 .build()
 
             try {
@@ -74,27 +79,5 @@ object NotificationHelper {
                 // Notification permission not granted - nothing we can do here.
             }
         }
-
-        val summaryText = if (movers.size == 1) {
-            "${movers[0].first.symbol} crossed your alert threshold"
-        } else {
-            "${movers.size} stocks crossed your alert thresholds"
-        }
-        val summary = NotificationCompat.Builder(context, CHANNEL_ID_SUMMARY)
-            .setSmallIcon(android.R.drawable.stat_notify_sync)
-            .setContentTitle("PSX price alerts")
-            .setContentText(summaryText)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(summaryText))
-            .setGroup(GROUP_KEY)
-            .setGroupSummary(true)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            .setAutoCancel(true)
-            .setContentIntent(openAppPi)
-            .build()
-
-        try {
-            manager.notify(SUMMARY_NOTIF_ID, summary)
-        } catch (_: SecurityException) { }
     }
 }

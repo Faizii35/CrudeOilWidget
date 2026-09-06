@@ -4,6 +4,7 @@ package com.psxtracker.widget.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -20,6 +21,9 @@ public final class ItemStockBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
+  public final ImageView ivBell;
+
+  @NonNull
   public final TextView tvChange;
 
   @NonNull
@@ -31,9 +35,11 @@ public final class ItemStockBinding implements ViewBinding {
   @NonNull
   public final TextView tvSymbol;
 
-  private ItemStockBinding(@NonNull LinearLayout rootView, @NonNull TextView tvChange,
-      @NonNull TextView tvPrice, @NonNull TextView tvSector, @NonNull TextView tvSymbol) {
+  private ItemStockBinding(@NonNull LinearLayout rootView, @NonNull ImageView ivBell,
+      @NonNull TextView tvChange, @NonNull TextView tvPrice, @NonNull TextView tvSector,
+      @NonNull TextView tvSymbol) {
     this.rootView = rootView;
+    this.ivBell = ivBell;
     this.tvChange = tvChange;
     this.tvPrice = tvPrice;
     this.tvSector = tvSector;
@@ -67,6 +73,12 @@ public final class ItemStockBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.iv_bell;
+      ImageView ivBell = ViewBindings.findChildViewById(rootView, id);
+      if (ivBell == null) {
+        break missingId;
+      }
+
       id = R.id.tv_change;
       TextView tvChange = ViewBindings.findChildViewById(rootView, id);
       if (tvChange == null) {
@@ -91,7 +103,8 @@ public final class ItemStockBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ItemStockBinding((LinearLayout) rootView, tvChange, tvPrice, tvSector, tvSymbol);
+      return new ItemStockBinding((LinearLayout) rootView, ivBell, tvChange, tvPrice, tvSector,
+          tvSymbol);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -4,7 +4,7 @@
             "outputFile": "com.psxtracker.widget.app-mergeDebugResources-40:/values-port/values-port.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\faizi\\.gradle\\caches\\transforms-3\\8891375a1bc91bb710ffef89177105ad\\transformed\\appcompat-1.6.1\\res\\values-port\\values-port.xml",
+                    "source": "C:\\Users\\faizi\\Downloads\\CrudeOilWidget\\CrudeOilWidget\\.gradle\\caches\\transforms-3\\8891375a1bc91bb710ffef89177105ad\\transformed\\appcompat-1.6.1\\res\\values-port\\values-port.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

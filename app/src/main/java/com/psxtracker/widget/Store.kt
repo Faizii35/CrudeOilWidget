@@ -17,25 +17,74 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 /** All the % thresholds the user can toggle on. */
 val ALL_THRESHOLDS = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
-/** User-selected notification thresholds (applies to both up and down moves, per stock). */
+/** User-selected notification thresholds for up/down moves. */
 object AlertPreferences {
-    private val THRESHOLDS_KEY = stringSetPreferencesKey("enabled_thresholds")
+    private val THRESHOLDS_UP_KEY = stringSetPreferencesKey("enabled_thresholds_up")
+    private val THRESHOLDS_DOWN_KEY = stringSetPreferencesKey("enabled_thresholds_down")
 
-    suspend fun getThresholds(context: Context): Set<Int> =
-        context.dataStore.data.first()[THRESHOLDS_KEY]?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet()
+    suspend fun getThresholdsUp(context: Context): Set<Int> =
+        context.dataStore.data.first()[THRESHOLDS_UP_KEY]?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet()
 
-    fun thresholdsFlow(context: Context): Flow<Set<Int>> =
-        context.dataStore.data.map { prefs ->
-            prefs[THRESHOLDS_KEY]?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet()
-        }
+    suspend fun getThresholdsDown(context: Context): Set<Int> =
+        context.dataStore.data.first()[THRESHOLDS_DOWN_KEY]?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet()
 
-    suspend fun setThresholds(context: Context, thresholds: Set<Int>) {
-        context.dataStore.edit { prefs -> prefs[THRESHOLDS_KEY] = thresholds.map { it.toString() }.toSet() }
+    suspend fun setThresholdsUp(context: Context, thresholds: Set<Int>) {
+        context.dataStore.edit { prefs -> prefs[THRESHOLDS_UP_KEY] = thresholds.map { it.toString() }.toSet() }
+    }
+
+    suspend fun setThresholdsDown(context: Context, thresholds: Set<Int>) {
+        context.dataStore.edit { prefs -> prefs[THRESHOLDS_DOWN_KEY] = thresholds.map { it.toString() }.toSet() }
     }
 
     /** Highest enabled threshold that |changePercent| has crossed, or null if none. */
-    fun matchedTier(changePercent: Double, enabled: Set<Int>): Int? =
-        enabled.filter { kotlin.math.abs(changePercent) >= it }.maxOrNull()
+    fun matchedTier(changePercent: Double, enabledUp: Set<Int>, enabledDown: Set<Int>): Int? {
+        return if (changePercent >= 0) {
+            enabledUp.filter { changePercent >= it }.maxOrNull()
+        } else {
+            enabledDown.filter { kotlin.math.abs(changePercent) >= it }.maxOrNull()
+        }
+    }
+}
+
+/** Specific alerts per stock symbol. */
+object StockAlertPreferences {
+    private val SPECIFIC_ALERTS_KEY = stringPreferencesKey("specific_stock_alerts")
+
+    private suspend fun readMap(context: Context): MutableMap<String, Int> {
+        val json = context.dataStore.data.first()[SPECIFIC_ALERTS_KEY] ?: return mutableMapOf()
+        val out = mutableMapOf<String, Int>()
+        try {
+            val obj = JSONObject(json)
+            obj.keys().forEach { symbol ->
+                out[symbol] = obj.getInt(symbol)
+            }
+        } catch (_: Exception) { }
+        return out
+    }
+
+    private suspend fun writeMap(context: Context, map: Map<String, Int>) {
+        val obj = JSONObject()
+        map.forEach { (symbol, threshold) ->
+            obj.put(symbol, threshold)
+        }
+        context.dataStore.edit { prefs -> prefs[SPECIFIC_ALERTS_KEY] = obj.toString() }
+    }
+
+    suspend fun getThreshold(context: Context, symbol: String): Int? {
+        return readMap(context)[symbol]
+    }
+
+    suspend fun setThreshold(context: Context, symbol: String, threshold: Int?) {
+        val map = readMap(context)
+        if (threshold == null) {
+            map.remove(symbol)
+        } else {
+            map[symbol] = threshold
+        }
+        writeMap(context, map)
+    }
+
+    suspend fun getAllSpecificAlerts(context: Context): Map<String, Int> = readMap(context)
 }
 
 /**
